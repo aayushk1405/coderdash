@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  # 1. Your Node.js API
+  backend:
+    build:
+      context: ../backend                 
+      dockerfile: ../deployment/Dockerfile 
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      # This points to the 'database' service defined below
+      - MONGO_URI=mongodb://database:27017/coderdash
+    depends_on:
+      - database
+
+  # 2. Your Local MongoDB Database
+  database:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
